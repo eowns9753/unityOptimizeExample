@@ -463,16 +463,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _optimizeReviewSet:
-  - menuName: 
+  - menuName: Test1
     reviewScript:
-      rid: -2
+      rid: 5104667690850058240
+  - menuName: Test2
+    reviewScript:
+      rid: 5104667690850058241
   _listItemPrefab: {fileID: 1130290952}
   _listViewTransform: {fileID: 644008940}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 5104667690850058240
+      type: {class: Optimize_JobBurst, ns: OptimizeReview, asm: Assembly-CSharp}
+      data: 
+    - rid: 5104667690850058241
+      type: {class: Optimize_SIMD, ns: OptimizeReview, asm: Assembly-CSharp}
+      data: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

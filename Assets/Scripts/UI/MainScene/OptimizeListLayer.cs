@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OptimizeReview;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace UI.MainScene
@@ -27,7 +28,7 @@ namespace UI.MainScene
     [Serializable]
     public struct OptimizeReviewSet
     {
-        public string menuName;
-        public OptimizeReviewBase reviewScript;
+        [HorizontalGroup]public string menuName;
+        [HideLabel,HorizontalGroup,SerializeReference] public OptimizeReviewBase reviewScript;
     }
 }

@@ -3,6 +3,8 @@
 namespace OptimizeReview
 {
     public delegate void OptimizeReviewResultHandler(string resultComment,bool isSuccess);
+    
+    [Serializable]
     public abstract class OptimizeReviewBase
     {
         [NonSerialized] public OptimizeReviewResultHandler Result = null;
