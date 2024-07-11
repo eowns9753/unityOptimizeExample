@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OptimizeReview;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
 namespace UI.MainScene
@@ -11,6 +12,7 @@ namespace UI.MainScene
         [SerializeField] private List<OptimizeReviewSet> _optimizeReviewSet;
         [SerializeField] private OptimizeListItem _listItemPrefab;
         [SerializeField] private Transform _listViewTransform;
+        [SerializeField] private TextMeshProUGUI _btnElapseTime;
         
         private void Start()
         {

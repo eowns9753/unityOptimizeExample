@@ -7,7 +7,8 @@ namespace UI.MainScene
     public class OptimizeListItem : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI _text;
-        [SerializeField] private Button _button;
+        [SerializeField] private Button _btnCall;
+        [SerializeField] private Button _btnCodeView;
         
         public void Refresh(OptimizeReviewSet reviewSet)
         {

@@ -6,12 +6,7 @@
         {
             
         }
-
-        public override void CallNonOptimizeCase()
-        {
-            
-        }
-
+        
         public override void CallOptimizeCase()
         {
             

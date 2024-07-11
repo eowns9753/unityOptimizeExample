@@ -11,7 +11,6 @@ namespace OptimizeReview
         public virtual bool HasCall { get; set; } 
         
         public abstract void Initialize();
-        public abstract void CallNonOptimizeCase();
         public abstract void CallOptimizeCase();
     }
 }
