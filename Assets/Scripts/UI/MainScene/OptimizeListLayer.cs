@@ -19,7 +19,7 @@ namespace UI.MainScene
             foreach (var set in _optimizeReviewSet)
             {
                 var nObjs = Instantiate(_listItemPrefab.gameObject, _listViewTransform);
-                nObjs.GetComponent<OptimizeListItem>().Refresh(set);
+                nObjs.GetComponent<OptimizeListItem>().Refresh(this, set);
             }
             
             //목업은 실행시 숨김
@@ -30,7 +30,7 @@ namespace UI.MainScene
     [Serializable]
     public struct OptimizeReviewSet
     {
-        [HorizontalGroup]public string menuName;
+        [HorizontalGroup] public string menuName;
         [HideLabel,HorizontalGroup,SerializeReference] public OptimizeReviewBase reviewScript;
     }
 }

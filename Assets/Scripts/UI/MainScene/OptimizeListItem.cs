@@ -10,9 +10,13 @@ namespace UI.MainScene
         [SerializeField] private Button _btnCall;
         [SerializeField] private Button _btnCodeView;
         
-        public void Refresh(OptimizeReviewSet reviewSet)
+        public void Refresh(OptimizeListLayer parentLayer,OptimizeReviewSet reviewSet)
         {
             _text.text = reviewSet.menuName;
+            var reviewScript = reviewSet.reviewScript;
+            reviewScript.ParentLayer = parentLayer;
+            _btnCodeView.onClick.AddListener(reviewScript.OpenScript);
+            _btnCall.onClick.AddListener(reviewScript.CallOptimizeCase);
         }
     }
 }
