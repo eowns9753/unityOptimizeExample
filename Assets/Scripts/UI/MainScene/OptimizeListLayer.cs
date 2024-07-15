@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Cysharp.Threading.Tasks;
 using OptimizeReview;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI.MainScene
 {
@@ -31,19 +33,20 @@ namespace UI.MainScene
             
             //목업은 실행시 숨김
             _listItemPrefab.gameObject.SetActive(false);
+            ClearLog();
         }
 
         public void ClearLog()
         {
             _logContent.Clear();
-            _txt_Log.text = _logContent.ToString();
+            FlushStrBuilderToTxt().Forget();
         }
 
         public void WriteLog(string txt)
         {
             _logContent.Append(txt);
             _logContent.Append('\n');
-            _txt_Log.text = _logContent.ToString();
+            FlushStrBuilderToTxt().Forget();
         }
 
         public void WriteLog(string txt, Color color)
@@ -51,6 +54,13 @@ namespace UI.MainScene
             _logContent.Append($"<color=#{ ColorUtility.ToHtmlStringRGB(color)}>");
             WriteLog(txt);
             _logContent.Append("</color>");
+            FlushStrBuilderToTxt().Forget();
+        }
+
+        private async UniTask FlushStrBuilderToTxt()
+        {
+            _txt_Log.Rebuild(CanvasUpdate.Layout);
+            await UniTask.NextFrame();
             _txt_Log.text = _logContent.ToString();
         }
 
