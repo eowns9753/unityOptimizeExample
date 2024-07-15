@@ -1,16 +1,12 @@
-﻿namespace OptimizeReview
+﻿using UI.MainScene;
+
+namespace OptimizeReview
 {
     public class Optimize_SIMD : OptimizeReviewBase
     {
-        
-        public override void Initialize()
+        public override void CallOptimizeCase(OptimizeListLayer parent)
         {
-            HasCall = true;
-        }
-        
-        public override void CallOptimizeCase()
-        {
-            
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,15 +1,12 @@
-﻿namespace OptimizeReview
+﻿using UI.MainScene;
+
+namespace OptimizeReview
 {
     public class Optimize_JobBurst : OptimizeReviewBase
     {
-        public override void Initialize()
+        public override void CallOptimizeCase(OptimizeListLayer parent)
         {
-            
-        }
-        
-        public override void CallOptimizeCase()
-        {
-            
+            throw new System.NotImplementedException();
         }
     }
 }
