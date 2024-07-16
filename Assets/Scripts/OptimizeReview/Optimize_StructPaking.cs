@@ -10,38 +10,20 @@ namespace OptimizeReview
     {
         public override void CallOptimizeCase(OptimizeListLayer parent)
         {
-           
-            Debug.Log(Marshal.SizeOf(new Size19_32()));
-            Debug.Log(Marshal.SizeOf(new Size19_24()));
-            
-                
-            
-            
-            
             parent.WriteLog("1. Struct Size", HeaderColor);
-            WriteSize<Size9_12>(parent);
-            WriteSize<Size19_24>(parent);
-            WriteSize<Size6_8>(parent);
-            WriteSize<Vector3_10_12>(parent);
-            WriteSize<Vector3_12_12>(parent);
-            WriteSize<Vector3>(parent);
-            WriteSize<Vector4>(parent);
-            WriteSize<Size25_32>(parent);
-            
+            WriteSize<TestStruct32>(parent);
+            WriteSize<TestStruct24>(parent);
+            WriteSize<bool>(parent);
+            WriteSize<byte>(parent);
             InitializeTestTask(parent, 400000);
         }
 
         private async UniTask InitializeTestTask(OptimizeListLayer parent,int cycle)
         {
             parent.WriteLog("2. Initialize Test",HeaderColor);
-            await InitializeTest<Size9_12>(parent,cycle);
-            await InitializeTest<Size19_24>(parent,cycle);
-            await InitializeTest<Size6_8>(parent,cycle);
-            await InitializeTest<Vector3_10_12>(parent,cycle);
-            await InitializeTest<Vector3_12_12>(parent,cycle);
-            await InitializeTest<Vector3>(parent,cycle);
-            await InitializeTest<Vector4>(parent,cycle);
-            await InitializeTest<Size25_32>(parent,cycle);
+            await InitializeTest<TestStruct32>(parent,cycle);
+            await InitializeTest<TestStruct24>(parent,cycle);
+            await InitializeTest<bool>(parent,cycle);
         }
         
         void WriteSize<T>(OptimizeListLayer parent)
@@ -68,68 +50,24 @@ namespace OptimizeReview
             return moveidx;
         }
     }
-    public struct CustomVector3
+
+    public struct TestStruct32
     {
-        public long x;
-        public long y;
-        public byte z;
+        public long a;//8
+        public bool b;//8
+        public long c;//8
+        public short d;//8
+        public float e;//
     }
     
-    public struct Size19_32 //match 64bit
+    public struct TestStruct24
     {
-        public long a;
-        public bool b;
-        public long c;
-        public short d;
+        public long a;//8
+        public long c;//8
+        public float e;//8
+        public byte b;//
+        public short aa;
+      
     }
-    
-    public struct Size19_24 //match 64bit
-    {
-        public long a;
-        public long b;
-        public short c;
-        public bool d;
-    }
-    
-    
-    public struct Size25_32 //match 64bit
-    {
-        public long a; //8
-        public long b; //8
-        public long c; //8
-        public byte d; //1
-    }
-    
-    public struct Size9_12 //mismatch 64bit
-    {
-        public float x;
-        public float y;
-        public byte z;
-    }
-    
-    public struct Size6_8 //match 64bit
-    {
-        public float x;
-        public short y;
-    }
-    
-    public struct Vector3_10_12
-    {
-        public float x;
-        public float y;
-        public byte smallZ;
-        public byte smallW;
-    }
-    
-    public struct Vector3_12_12
-    {
-        public float x;
-        public float y;
-        public short smallZ;
-        public short smallW;
-    }
-    
-    //8byte(64bit)
-    
    
 }
