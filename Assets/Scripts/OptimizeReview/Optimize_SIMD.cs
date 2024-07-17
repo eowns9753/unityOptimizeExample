@@ -1,77 +1,117 @@
 ﻿using System.Collections.Generic;
 using UI.MainScene;
 using Unity.Burst;
+using Unity.Burst.CompilerServices;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
-using TestType = UnityEngine.Vector4;
 
 namespace OptimizeReview
 {
     public class Optimize_SIMD : OptimizeReviewBase
     {
-        private const int ArraySize = 5000000;
-        private TestType _addValue = new(1.2f,1.1f,0,0);
+        private const int ArraySize = 5000000;//500만
+        private int _addValue = 12;
         
         public override void CallOptimizeCase(OptimizeListLayer parent)
         {
-            var nonBurstArray = new TestType[ArraySize];
-            var burstArray = new NativeArray<TestType>(ArraySize, Allocator.TempJob);
-            for (int i = 0; i < nonBurstArray.Length; i++)
-                nonBurstArray[i] = GetRandomValue();
-            for (int i = 0; i < burstArray.Length; i++)
-                burstArray[i] = GetRandomValue();
+            for (int ix = 0; ix < 3; ix++)
+            {
+                parent.WriteLog($"BurstTest {ix+1}, arraySize {ArraySize}",Color.green);
+                var nonBurstArray = new Vector4[ArraySize];
+                var burstFloat4Array = new NativeArray<Vector4>(ArraySize, Allocator.TempJob);
             
-            SIMDTestJob job = new SIMDTestJob(burstArray, _addValue);
-            StartTimer();
+                for (int i = 0; i < nonBurstArray.Length; i++)
+                    nonBurstArray[i] = new Vector4(getRand(),getRand(),getRand(),getRand());
+                for (int i = 0; i < burstFloat4Array.Length; i++)
+                    burstFloat4Array[i] = new Vector4(getRand(),getRand(),getRand(),getRand());
+            
+                var float4Job = new Float4Job(burstFloat4Array, _addValue);
+                StartTimer();
+                var handle = float4Job.Schedule();
+                handle.Complete();
+                parent.WriteLog($"UseBurst, float4 + int {EndTimer()} s");
+                burstFloat4Array.Dispose();
+            
+            
+                StartTimer();
+                Float4Job.NonBurstExecute(nonBurstArray,_addValue);
+                parent.WriteLog($"UseMono, float4 + int {EndTimer()} s");
+            }
+            
+        }
+
+        void Call()
+        {
+            //네이티브 컨테이너 생성
+            NativeArray<int> tempArray = new NativeArray<int>(1000, Allocator.TempJob, NativeArrayOptions.ClearMemory);
+            
+            TestJob job = new TestJob(tempArray);
             var handle = job.Schedule();
+            //잡연산이 끝날때까지 대기
             handle.Complete();
-            parent.WriteLog($"burst add {EndTimer()}");
-            burstArray.Dispose();
             
-            StartTimer();
-            for (int i = 0; i < nonBurstArray.Length; i++)
-                nonBurstArray[i] += _addValue;
-            parent.WriteLog($"non burst add {EndTimer()}");
+            //네이티브 컨테이너 소멸
+            tempArray.Dispose();
         }
         
-        TestType GetRandomValue()
-        {
-            TestType result = new TestType();
-            result.x = UnityEngine.Random.Range(0, 1000);
-            result.y = UnityEngine.Random.Range(0, 1000);
-            result.z = UnityEngine.Random.Range(0, 1000);
-            return result;
-        }
+
+        int getRand() => UnityEngine.Random.Range(0, 1000);
     }
     
     [BurstCompile]
-    public  struct SIMDTestJob : IJob
+    public struct Float4Job : IJob
     {
-        private NativeArray<TestType> _burstArray;
-        private Vector4 _addValue;
+        private NativeArray<Vector4> _burstArray;
+        private int _addValueInt;
         
-        public SIMDTestJob(NativeArray<TestType> arr,TestType addValue)
+        public Float4Job(NativeArray<Vector4> arr,int addValue)
         {
             _burstArray = arr;
-            _addValue = addValue;
+            _addValueInt = addValue;
         }
 
         public void Execute()
         {
             for (int i = 0; i < _burstArray.Length; i++)
             {
-                //mathmatics
-                /*float4 v = _burstArray[i];
-                float4 r = v + _addValue;
-                _burstArray[i]=  r ;*/
-                
-                //vector
-                _burstArray[i] += _addValue;
+                float4 r = (float4)_burstArray[i] + _addValueInt;
+                _burstArray[i]=  (Vector4)r ;
+            }
+        }
+        
+        public static void NonBurstExecute(Vector4[] arr,int addValue)
+        {
+            var add = new Vector4(addValue, addValue, addValue, addValue);
+            for (int i = 0; i < arr.Length; i++)
+            {
+                var r = arr[i]+add;
+                arr[i] = r;
+            }
+            
+        }
+    }
+    
+    [BurstCompile]
+    public struct TestJob : IJob
+    {
+        private NativeArray<int> _list;
+        public TestJob(NativeArray<int> list)
+        {
+            _list = list;
+        }
+    
+        public void Execute()
+        {
+            for (int i = 0; i < _list.Length; i++)
+            {
+                _list[i] += 1;
             }
         }
     }
+    
+    
 }
